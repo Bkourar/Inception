@@ -1,0 +1,158 @@
+networks:
+  inception:
+    name: inception
+
+volumes:
+  wordpress-files:
+    name: wordpress-files
+    driver: local
+    driver_opts:
+      device: /home/${USER}/data/wordpress-files
+      o: bind
+      type: none
+  database-files:
+    name: database-files
+    driver: local
+    driver_opts:
+      device: /home/${USER}/data/database-files
+      o: bind
+      type: none
+  nginx-log:
+    name: nginx-log
+    driver: local
+    driver_opts:
+      device: /home/${USER}/data/nginx-log
+      o: bind
+      type: none
+  ssl-certs:
+    name: ssl-certs
+    driver: local
+    driver_opts:
+      device: /home/${USER}/data/ssl-certs
+      o: bind
+      type: none
+services:
+  nginx:
+    build: ./requirements/nginx/.
+    image: nginx:incep
+    container_name: nginx
+    ports:
+      - '443:443'
+    volumes:
+      - 'wordpress-files:/var/www/html'
+      - 'nginx-log:/var/log/nginx'
+      - 'ssl-certs:/var/certs'
+    restart: on-failure
+    depends_on:
+        wordpress:
+          condition: service_healthy
+        mariadb:
+          condition: service_healthy
+    networks:
+      - inception
+    env_file: .env
+    healthcheck:
+      test: ["CMD-SHELL", "service nginx status || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  wordpress:
+    build: ./requirements/wordpress/.
+    image: wordpress:incep
+    container_name: wordpress
+    volumes:
+      - 'wordpress-files:/var/www/html/'
+    ports:
+      - "9001:9001"
+    restart: on-failure
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - inception
+    env_file: .env
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'php-fpm' >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  mariadb:
+    build: ./requirements/mariadb/.
+    image: mariadb:incep
+    container_name: mariadb
+    restart: on-failure
+    networks:
+      - inception
+    volumes:
+      - 'database-files:/var/sql_data/'
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}    # set in .env (add if needed)
+      MYSQL_DATABASE: ${db_name}
+      MYSQL_USER: ${db_user}
+      MYSQL_PASSWORD: ${db_user_pass}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    redis:
+      build: ./requirements/bonus/redis/.
+      image: redis:incep
+      container_name: redis
+      restart: on-failure
+      networks:
+        - inception
+      env_file:
+        - .env
+      healthcheck:
+        test: ["CMD","redis-cli", "ping"]
+        interval: 5s
+        timeout: 3s
+        retries: 5
+        start_period: 10s
+      adminer:
+        build: ./requirements/bonus/adminer/.
+        image: adminer:incep
+        container_name: adminer
+        env_file:
+          - .env
+        ports:
+          - '1001:1001'
+        restart: on-failure
+        networks:
+          - inception
+        depends_on:
+          mariadb:
+            condition: service_healthy
+      ftp_server:
+        build: ./requirements/bonus/ftp_server/.
+        image: ftp_server:incep
+        container_name: ftp_server
+        env_file:
+          - .env
+        ports:
+          - '1002:21'
+          - '21000-21010:21000-21010'
+        restart: on-failure
+        networks:
+          - inception
+        depends_on:
+          wordpress:
+            condition: service_healthy
+        volumes:
+          - 'wordpress-files:/var/www/html'
+      static-web:
+        build: ./requirements/bonus/static_web/.
+        image: static_web:incep
+        container_name: static_web
+        restart: on-failure
+        networks:
+          - inception
+        ports:
+          - "8080:80"
+        volumes:
+          - ./requirements/bonus/static_web/about:/usr/share/nginx/html

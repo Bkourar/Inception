@@ -1,0 +1,11 @@
+FROM debian:bookworm
+RUN apt -qq upgrade -y && apt -qq update -y && apt -q install vim curl net-tools wget php-redis less php php-fpm php-mysql -y
+RUN apt remove apache2 -y
+
+###
+COPY --chmod=444 conf/php-fcgi /etc/php/8.2/fpm/pool.d/www.conf
+COPY --chmod=744 tools/up /up_sh
+COPY conf/about /about
+###
+EXPOSE 9000
+ENTRYPOINT ["/up_sh"]

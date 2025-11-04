@@ -1,0 +1,15 @@
+FROM debian:bookworm
+
+RUN apt-get update && \
+    apt-get install -y nginx && \
+    apt-get clean && \
+    chown -R nginx:nginx /var/lib/html &&  chmod 755 /var/lib/html
+
+COPY --chmod=644 conf/nginx.conf /etc/nginx/nginx.conf
+
+COPY --chmod=644 ./about/ /usr/share/nginx/html/
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+

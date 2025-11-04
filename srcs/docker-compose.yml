@@ -40,9 +40,15 @@ services:
     ports:
       - '443:443'
     volumes:
-      - 'wordpress-files:/var/www/html'
-      - 'nginx-log:/var/log/nginx'
-      - 'ssl-certs:/var/certs'
+      - type : bind
+        source : ${HOME}/data/wordpress-files
+        target : /var/www/html
+      - type : bind
+        source : ${HOME}/data/nginx-log
+        target : /var/log/nginx
+      - type : bind
+        source : ${HOME}/data/ssl-certs
+        target : /var/certs
     restart: on-failure
     depends_on:
       wordpress:
@@ -64,7 +70,9 @@ services:
     image: wordpress:incep
     container_name: wordpress
     volumes:
-      - 'wordpress-files:/var/www/html/'
+      - type : bind
+        source : ${HOME}/data/wordpress-files
+        target : /var/www/html
     ports:
       - "9001:9001"
     restart: on-failure
@@ -89,7 +97,9 @@ services:
     networks:
       - inception
     volumes:
-      - 'database-files:/var/sql_data/'
+      - type : bind
+        source : ${HOME}/data/database-files
+        target : /var/sql_data/
     env_file: .env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
@@ -107,7 +117,7 @@ services:
     build: ./requirements/bonus/redis/.
     image: redis:incep
     container_name: redis
-    restart: on-failure
+    restart: unless-stopped
     networks:
       - inception
     env_file:
@@ -150,7 +160,9 @@ services:
       wordpress:
         condition: service_healthy
     volumes:
-      - 'wordpress-files:/var/www/html'
+      - type : bind
+        source : ${HOME}/data/wordpress-files
+        target : /var/www/html
 
   static-web:
     build: ./requirements/bonus/static_website/.
@@ -162,5 +174,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./requirements/bonus/static_website/about:/usr/share/nginx/html
+      - type : bind
+        source : ./requirements/bonus/static_website/about
+        target : /usr/share/nginx/html
 

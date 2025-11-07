@@ -1,10 +1,17 @@
 #!/bin/bash
 
-if id "$ftp_user" > /dev/null 2>&1; then
-	vsftpd
-else
-	useradd -p $(openssl passwd -1 $ftp_user_pass) $ftp_user
-	mkdir -p /var/run/vsftpd/empty /home/$ftp_user
-	chown $ftp_user /var/www/html
-	vsftpd
+if [ -z "$ftp_user" ] || [ -z "$ftp_user_pass" ]; then
+    exit 1
 fi
+
+if ! id "$ftp_user" > /dev/null 2>&1; then
+    useradd -m "$ftp_user"
+    echo "$ftp_user:$ftp_user_pass" | chpasswd
+    mkdir -p /var/run/vsftpd/empty /home/$ftp_user
+    chown -R $ftp_user:$ftp_user /home/$ftp_user
+fi
+
+mkdir -p /var/www/html
+chown -R $ftp_user:$ftp_user /var/www/html
+
+vsftpd

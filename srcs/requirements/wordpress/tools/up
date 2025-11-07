@@ -7,22 +7,24 @@ wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &
 chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
 
-if [ ! -f "/var/www/html/wp-config.php" ]; then
-    ./wp-cli.phar core download --allow-root
-    ./wp-cli.phar config create --dbname=$db_name --dbuser=$db_user --dbpass=$db_user_pass --dbhost=mariadb:3306 --allow-root
-    ./wp-cli.phar user create $wp_user $wp_user_email --user_pass=$wp_user_pass --allow-root
-    ./wp-cli.phar config set WP_REDIS_HOST "redis" --allow-root
-    ./wp-cli.phar config set WP_REDIS_PORT 6379 --raw --allow-root
-    ./wp-cli.phar config set WP_CACHE_KEY_SALT $ip_addr --allow-root
-    ./wp-cli.phar config set WP_CACHE true --raw --allow-root
-    ./wp-cli.phar config set WP_REDIS_DISABLE_DROPIN_CHECK true --raw --allow-root
-    ./wp-cli.phar core install --url=$ip_addr --title=BIKOURAR --admin_user=$wp_admin --admin_password=$wp_admin_pass --admin_email=$wp_admin_email --allow-root
-    ./wp-cli.phar plugin install redis-cache --activate --allow-root
-    ./wp-cli.phar redis enable --allow-root
-    ./wp-cli.phar theme install vermeer --allow-root
-    ./wp-cli.phar theme activate vermeer --allow-root
-    ./wp-cli.phar theme install twentytwentyone --allow-root
-    ./wp-cli.phar theme activate twentytwentyone --allow-root
+./wp-cli.phar core download --allow-root
+./wp-cli.phar config create --dbname=$db_name --dbuser=$db_user --dbpass=$db_user_pass --dbhost=mariadb:3306 --allow-root
+./wp-cli.phar user create $wp_user $wp_user_email --user_pass=$wp_user_pass --allow-root
+./wp-cli.phar config set WP_REDIS_HOST "redis" --allow-root
+./wp-cli.phar config set WP_REDIS_PORT 6379 --raw --allow-root
+./wp-cli.phar config set WP_CACHE_KEY_SALT $ip_addr --allow-root
+./wp-cli.phar config set WP_CACHE true --raw --allow-root
+./wp-cli.phar config set WP_REDIS_DISABLE_DROPIN_CHECK true --raw --allow-root
+./wp-cli.phar core install --url=$ip_addr --title=BIKOURAR --admin_user=$wp_admin --admin_password=$wp_admin_pass --admin_email=$wp_admin_email --allow-root
+./wp-cli.phar plugin install redis-cache --activate --allow-root
+./wp-cli.phar redis enable --allow-root
+./wp-cli.phar theme install vermeer --allow-root
+./wp-cli.phar theme activate vermeer --allow-root
+./wp-cli.phar theme install twentytwentyone --allow-root
+./wp-cli.phar theme activate twentytwentyone --allow-root
+
+if [ -d "../conf/about" ]; then
+  mv ../conf/about ./about
 fi
 
 exec php-fpm8.2 -F

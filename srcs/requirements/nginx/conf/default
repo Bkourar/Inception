@@ -18,6 +18,7 @@
 
 # Default server configuration
 #
+
 server {
 	# listen 80 default_server;
 	# listen [::]:80 default_server;
@@ -40,13 +41,20 @@ server {
 	ssl_protocols TLSv1.2 TLSv1.3;
 	ssl_certificate /var/certs/certificate.crt;
 	ssl_certificate_key /var/certs/certificate.key;
+	ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
+	ssl_prefer_server_ciphers on;
+	ssl_session_cache shared:SSL:10m;
+	ssl_session_timeout 1d;
+
+	# HTTP Strict Transport Security (HSTS)
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
 	root /var/www/html;
 
 	# Add index.php to the list if you are using PHP
 	index index.html index.htm index.nginx-debian.html index.php;
 
-	server_name bikourar.1337.ma;
+	server_name bikourar.42.fr;
 
 	location / {
 		# First attempt to serve request as file, then

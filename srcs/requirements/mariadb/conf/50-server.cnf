@@ -5,7 +5,7 @@
 # this is read by the standalone daemon and embedded servers
 [server]
 
-init_file = /etc/mysql/database_init.sql
+init_file = /var/sql_data/database_init.sql
 # this is only for the mysqld standalone daemon
 [mysqld]
 
@@ -17,7 +17,7 @@ user                    = root
 pid-file                = /var/sql_data/mysqld.pid
 basedir                 = /usr
 datadir                 = /var/sql_data
-socket		    = /var/sql_data/mysqld.sock
+socket		            = /var/sql_data/mysqld.sock
 tmpdir                  = /tmp
 
 # Broken reverse DNS slows down connections considerably and name resolve is
@@ -26,7 +26,7 @@ tmpdir                  = /tmp
 
 # Instead of skip-networking the default is now to listen only on
 # localhost which is more compatible and is not less secure.
-bind-address            = mariadb
+bind-address            = 0.0.0.0
 
 #
 # * Fine Tuning

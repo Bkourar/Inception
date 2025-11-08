@@ -1,6 +1,8 @@
-FROM debian:bookworm
-RUN apt -qq upgrade -y && apt -qq update -y && apt -q install vim net-tools redis-server -y
-###
+FROM debian:bookworm-slim
+
+RUN apt-get -qq update -y && apt-get -q install --no-install-recommends -y net-tools redis-server && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY --chmod=444 conf/redis_conf /etc/redis/redis.conf
-###
-CMD ["redis-server", "/etc/redis/redis.conf"]
+
+ENTRYPOINT ["redis-server", "/etc/redis/redis.conf"]

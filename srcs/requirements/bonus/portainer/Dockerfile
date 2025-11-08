@@ -1,9 +1,8 @@
-FROM debian:bookworm
+FROM debian:bookworm-slim
 
-RUN apt-get update && apt-get install -y wget tar git && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN wget https://github.com/portainer/portainer/releases/download/2.33.2/portainer-2.33.2-linux-amd64.tar.gz && \
+RUN apt-get -qq update -y && apt-get -q -y --no-install-recommends install wget tar git ca-certificates && \
+    rm -rf /var/lib/apt/lists/* && \
+    wget https://github.com/portainer/portainer/releases/download/2.33.2/portainer-2.33.2-linux-amd64.tar.gz && \
     tar xzf portainer-2.33.2-linux-amd64.tar.gz && \
     rm portainer-2.33.2-linux-amd64.tar.gz
 

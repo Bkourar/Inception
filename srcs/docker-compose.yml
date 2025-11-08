@@ -135,11 +135,12 @@ services:
       - type : bind
         source : ${HOME}/data/wordpress-files
         target : /var/www/html
+
   portainer:
     build: ./requirements/bonus/portainer
     image: portainer:incep
     container_name: portainer
-    restart: on-failure
+    restart: always
     ports:
       - "9443:9443"
     volumes:

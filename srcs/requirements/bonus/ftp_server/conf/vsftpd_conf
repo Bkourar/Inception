@@ -1,35 +1,14 @@
-
 listen=YES
-#
-
-#
-# Allow anonymous FTP? (Disabled by default).
 anonymous_enable=NO
-#
-# Uncomment this to allow local users to log in.
 local_enable=YES
-#
-# Uncomment this to enable any form of FTP write command.
 write_enable=YES
-#
-#
 local_root=/var/www/html/
-
-
-
 chroot_local_user=YES
 allow_writeable_chroot=YES
-
 secure_chroot_dir=/var/www/html/
-#
-# This string is the name of the PAM service vsftpd will use.
 pam_service_name=vsftpd
 pasv_enable=YES
 pasv_min_port=21000
 pasv_max_port=21010
 pasv_address=0.0.0.0
-
-
 seccomp_sandbox=NO
-
-

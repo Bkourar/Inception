@@ -23,8 +23,6 @@ chmod -R 755 /var/www/html
 ./wp-cli.phar theme install twentytwentyone --allow-root
 ./wp-cli.phar theme activate twentytwentyone --allow-root
 
-if [ -d "../conf/about" ]; then
-  mv ../conf/about ./about
-fi
+
 
 exec php-fpm8.2 -F

@@ -86,7 +86,7 @@ services:
     build: ./requirements/bonus/redis/.
     image: redis:incep
     container_name: redis
-    restart: unless-stopped
+    restart: on-failure
     networks:
       - inception
     env_file:

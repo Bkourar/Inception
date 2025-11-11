@@ -42,15 +42,7 @@ services:
       - wordpress-files:/var/www/html
       - nginx-log:/var/log/nginx
       - ssl-certs:/var/certs
-      # - type : bind
-      #   source : /home/${USER}/data/wordpress-files
-      #   target : /var/www/html
-      # - type : bind
-      #   source : /home/${USER}/data/nginx-log
-      #   target : /var/log/nginx
-      # - type : bind
-      #   source : /home/${USER}/data/ssl-certs
-      #   target : /var/certs
+
     restart: on-failure
     depends_on:
       wordpress:
@@ -73,9 +65,6 @@ services:
     container_name: wordpress
     volumes:
       - wordpress-files:/var/www/html
-      # - type : bind
-      #   source : /home/${USER}/data/wordpress-files
-      #   target : /var/www/html
     restart: on-failure
     depends_on:
       mariadb:
@@ -99,9 +88,6 @@ services:
       - inception
     volumes:
       - database-files:/var/sql_data/
-      # - type : bind
-      #   source : /home/${USER}/data/database-files
-      #   target : /var/sql_data/
     env_file: .env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
@@ -165,10 +151,7 @@ services:
       wordpress:
         condition: service_healthy
     volumes:
-      - database-files:/var/www/html
-      # - type : bind
-      #   source : /home/${USER}/data/wordpress-files
-      #   target : /var/www/html
+      - wordpress-files:/var/www/html
   portainer:
     build: ./requirements/bonus/portainer
     image: portainer:incep
@@ -190,7 +173,4 @@ services:
       - "8080:80"
     volumes:
       - ./requirements/bonus/static_website/about:/usr/share/nginx/html
-      # - type : bind
-      #   source : ./requirements/bonus/static_website/about
-      #   target : /usr/share/nginx/html
 

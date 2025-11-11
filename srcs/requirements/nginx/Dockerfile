@@ -11,7 +11,7 @@ RUN mkdir -p /etc/nginx/certs/ && \
 	-out /etc/nginx/certs/certificate.crt -days 365 \
 	-subj "/C=MA/O=42/OU=Inception/CN=bikourar.42.fr"
 
-EXPOSE 80 443/tcp
+EXPOSE 443/tcp
 
 ENTRYPOINT ["/nginx_sh"]
 

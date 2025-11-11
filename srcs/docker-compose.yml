@@ -1,6 +1,36 @@
 networks:
   inception:
     name: inception
+
+volumes:
+  wordpress-files:
+    name: wordpress-files
+    driver: local
+    driver_opts:
+      device: /home/${USER}/data/wordpress-files
+      o: bind
+      type: none
+  database-files:
+    name: database-files
+    driver: local
+    driver_opts:
+      device: /home/${USER}/data/database-files
+      o: bind
+      type: none
+  nginx-log:
+    name: nginx-log
+    driver: local
+    driver_opts:
+      device: /home/${USER}/data/nginx-log
+      o: bind
+      type: none
+  ssl-certs:
+    name: ssl-certs
+    driver: local
+    driver_opts:
+      device: /home/${USER}/data/ssl-certs
+      o: bind
+      type: none
 services:
   nginx:
     build: ./requirements/nginx/.
@@ -9,15 +39,18 @@ services:
     ports:
       - '443:443'
     volumes:
-      - type : bind
-        source : ${HOME}/data/wordpress-files
-        target : /var/www/html
-      - type : bind
-        source : ${HOME}/data/nginx-log
-        target : /var/log/nginx
-      - type : bind
-        source : ${HOME}/data/ssl-certs
-        target : /var/certs
+      - wordpress-files:/var/www/html
+      - nginx-log:/var/log/nginx
+      - ssl-certs:/var/certs
+      # - type : bind
+      #   source : /home/${USER}/data/wordpress-files
+      #   target : /var/www/html
+      # - type : bind
+      #   source : /home/${USER}/data/nginx-log
+      #   target : /var/log/nginx
+      # - type : bind
+      #   source : /home/${USER}/data/ssl-certs
+      #   target : /var/certs
     restart: on-failure
     depends_on:
       wordpress:
@@ -39,11 +72,10 @@ services:
     image: wordpress:incep
     container_name: wordpress
     volumes:
-      - type : bind
-        source : ${HOME}/data/wordpress-files
-        target : /var/www/html
-    ports:
-      - "9001:9001"
+      - wordpress-files:/var/www/html
+      # - type : bind
+      #   source : /home/${USER}/data/wordpress-files
+      #   target : /var/www/html
     restart: on-failure
     depends_on:
       mariadb:
@@ -66,9 +98,10 @@ services:
     networks:
       - inception
     volumes:
-      - type : bind
-        source : ${HOME}/data/database-files
-        target : /var/sql_data/
+      - database-files:/var/sql_data/
+      # - type : bind
+      #   source : /home/${USER}/data/database-files
+      #   target : /var/sql_data/
     env_file: .env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
@@ -132,10 +165,10 @@ services:
       wordpress:
         condition: service_healthy
     volumes:
-      - type : bind
-        source : ${HOME}/data/wordpress-files
-        target : /var/www/html
-
+      - database-files:/var/www/html
+      # - type : bind
+      #   source : /home/${USER}/data/wordpress-files
+      #   target : /var/www/html
   portainer:
     build: ./requirements/bonus/portainer
     image: portainer:incep
@@ -156,7 +189,8 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - type : bind
-        source : ./requirements/bonus/static_website/about
-        target : /usr/share/nginx/html
+      - ./requirements/bonus/static_website/about:/usr/share/nginx/html
+      # - type : bind
+      #   source : ./requirements/bonus/static_website/about
+      #   target : /usr/share/nginx/html
 

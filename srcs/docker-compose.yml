@@ -17,20 +17,7 @@ volumes:
       device: /home/${USER}/data/database-files
       o: bind
       type: none
-  nginx-log:
-    name: nginx-log
-    driver: local
-    driver_opts:
-      device: /home/${USER}/data/nginx-log
-      o: bind
-      type: none
-  ssl-certs:
-    name: ssl-certs
-    driver: local
-    driver_opts:
-      device: /home/${USER}/data/ssl-certs
-      o: bind
-      type: none
+
 services:
   nginx:
     build: ./requirements/nginx/.
@@ -40,9 +27,6 @@ services:
       - '443:443'
     volumes:
       - wordpress-files:/var/www/html
-      - nginx-log:/var/log/nginx
-      - ssl-certs:/var/certs
-
     restart: on-failure
     depends_on:
       wordpress:
@@ -142,7 +126,7 @@ services:
       - ftp_user=myftp
       - ftp_user_pass=pass
     ports:
-      - '1002:21'
+      - '21:21'
       - '21000-21010:21000-21010'
     restart: on-failure
     networks:
@@ -152,6 +136,7 @@ services:
         condition: service_healthy
     volumes:
       - wordpress-files:/var/www/html
+
   portainer:
     build: ./requirements/bonus/portainer
     image: portainer:incep
@@ -159,6 +144,8 @@ services:
     restart: always
     ports:
       - "9443:9443"
+    networks:
+      - inception
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 

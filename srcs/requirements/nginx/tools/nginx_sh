@@ -1,16 +1,9 @@
 #!/bin/bash
 
-if [ ! -f /var/certs/certificate.crt ]; then
-	cp /etc/nginx/certs/certificate.crt /var/certs/
-	cp /etc/nginx/certs/certificate.key /var/certs/
-fi
-
 rm -rf /var/www/html/index.html /var/www/html/dummy
 
 if [ ! -f /etc/nginx/certs/ ]; then 
 	mkdir -p /etc/nginx/certs/
 fi
-
-ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 
 nginx -g 'daemon off;'

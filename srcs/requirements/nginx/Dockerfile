@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 RUN apt-get -qq update -y && apt-get -q install --no-install-recommends net-tools nginx openssl -y && \
 	rm -rf /var/lib/apt/lists/*
 
-COPY conf/default /etc/nginx/sites-available/
+COPY --chmod=644 conf/default /etc/nginx/sites-enabled/
 COPY --chmod=744 tools/nginx_sh /
 
 RUN mkdir -p /etc/nginx/certs/ && \

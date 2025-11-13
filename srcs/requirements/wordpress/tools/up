@@ -18,11 +18,5 @@ chmod -R 755 /var/www/html
 ./wp-cli.phar core install --url=$ip_addr --title=BIKOURAR --admin_user=$wp_admin --admin_password=$wp_admin_pass --admin_email=$wp_admin_email --allow-root
 ./wp-cli.phar plugin install redis-cache --activate --allow-root
 ./wp-cli.phar redis enable --allow-root
-./wp-cli.phar theme install vermeer --allow-root
-./wp-cli.phar theme activate vermeer --allow-root
-./wp-cli.phar theme install twentytwentyone --allow-root
-./wp-cli.phar theme activate twentytwentyone --allow-root
-
-
 
 exec php-fpm8.2 -F

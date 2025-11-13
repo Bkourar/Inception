@@ -8,6 +8,6 @@ RUN apt-get -qq update -y && apt-get -q install --no-install-recommends -y vsftp
 COPY --chmod=644 conf/vsftpd_conf /etc/vsftpd.conf
 COPY --chmod=744 tools/start_sh /_start.sh
 
-EXPOSE 1002 21000-21010
+EXPOSE 21 21000-21010
 
 CMD ["/_start.sh"]

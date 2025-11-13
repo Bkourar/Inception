@@ -12,12 +12,9 @@ all: build
 setup:
 	@mkdir -p $(DATA_PATH)database-files || true
 	@mkdir -p $(DATA_PATH)wordpress-files || true
-	@mkdir -p $(DATA_PATH)nginx-log || true
-	@mkdir -p $(DATA_PATH)ssl-certs || true
-	@echo "$(PASS)" | sudo -S chown -R $(USER):$(USER) $(DATA_PATH)wordpress-files || true
-	@echo "$(PASS)" | sudo -S chown -R $(USER):$(USER) $(DATA_PATH)database-files || true
-	@echo "$(PASS)" | sudo -S chown -R $(USER):$(USER) $(DATA_PATH)nginx-log || true
-	@echo "$(PASS)" | sudo -S chown -R $(USER):$(USER) $(DATA_PATH)ssl-certs || true
+# @echo "$(PASS)" | sudo -S chown -R $(USER):$(USER) $(DATA_PATH)wordpress-files || true
+# @echo "$(PASS)" | sudo -S chown -R $(USER):$(USER) $(DATA_PATH)database-files || true
+
 build: setup
 	@docker compose -f $(COMPOSE_FILE) up -d --build || exit 1
 

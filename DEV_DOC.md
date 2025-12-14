@@ -59,7 +59,7 @@ example
 </li>
 <li>Update the Makefile
 
-    ```nano
+    ```bash
         DATA_PATH=/home/username/data
     ```
 </li>

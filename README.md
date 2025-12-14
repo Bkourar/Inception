@@ -154,14 +154,8 @@ This project uses bind mounts defined in docker-compose.yml, pointing to a direc
 
 ```text
 
-Client (Browser)
-      ↓
-NGINX (HTTPS / TLS)
-      ↓
-WordPress (PHP-FPM)
-      ↓
-MariaDB (Database)
-      ↓
-Redis (Cache)
+Client → NGINX (HTTPS) → WordPress → MariaDB
+                         ↓
+                       Redis
 
 ```

@@ -34,7 +34,7 @@ sudo nano /etc/hosts
 Environment Variables (.env):
 ```bash
 srcs/.env
-# Database
+# Database Example
 MYSQL_DATABASE=wordpress
 MYSQL_USER=wp_user
 MYSQL_HOST=mariadb

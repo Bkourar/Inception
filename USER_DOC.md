@@ -204,7 +204,7 @@ make restart
 ### Database Management (Adminer)
 <ul>
     <li>
-        <strong>URL:</strong> <code>https://adminer.sessarhi.42.fr</code>
+        <strong>URL:</strong> <code>https://adminer.bikourar.42.fr</code>
     </li>
     <li>
         <strong>Purpose:</strong>
@@ -221,8 +221,8 @@ make restart
         <ul>
             <li>System: MySQL</li>
             <li>Server: <code>mariadb</code></li>
-            <li>Username: <code>sessarhi</code></li>
-            <li>Password: Located in <code>secrets/db_password.txt</code></li>
+            <li>Username: <code>username</code></li>
+            <li>Password: Located in <code>db_user_password</code></li>
             <li>Database: <code>wordpress</code></li>
         </ul>
     </li>
